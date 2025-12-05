@@ -24,6 +24,7 @@ interface ProductsPageProps {
     category?: string;
     sort?: string;
     page?: string;
+    search?: string;
   }>;
 }
 
@@ -37,6 +38,7 @@ async function ProductsList({
     category?: string;
     sort?: string;
     page?: string;
+    search?: string;
   }>;
 }) {
   const params = await searchParams;
@@ -44,6 +46,7 @@ async function ProductsList({
   const sort = (params.sort as ProductSortOption) || "created_at_desc";
   const page = parseInt(params.page || "1", 10);
   const pageSize = 12;
+  const search = params.search;
 
   // 환경 변수 확인 (개발 환경에서만)
   if (process.env.NODE_ENV === "development") {
@@ -64,6 +67,13 @@ async function ProductsList({
   // 카테고리 필터 적용
   if (category && category !== "all") {
     query = query.eq("category", category);
+  }
+
+  // 검색어 필터 적용
+  if (search && search.trim()) {
+    query = query.or(
+      `name.ilike.%${search}%,description.ilike.%${search}%`
+    );
   }
 
   // 정렬 적용
