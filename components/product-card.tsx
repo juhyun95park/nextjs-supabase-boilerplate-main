@@ -40,6 +40,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
         isOutOfStock && "opacity-60"
       )}
+      aria-label={`${product.name} 상품 상세 보기`}
     >
       {/* 상품 이미지 */}
       <div className="relative aspect-square w-full overflow-hidden rounded-t-lg bg-muted">
@@ -51,7 +52,11 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
         {/* 재고 없음 배지 */}
         {isOutOfStock && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+          <div
+            className="absolute inset-0 flex items-center justify-center bg-black/50"
+            role="status"
+            aria-label="품절"
+          >
             <span className="rounded-full bg-destructive px-4 py-2 text-sm font-semibold text-destructive-foreground">
               품절
             </span>

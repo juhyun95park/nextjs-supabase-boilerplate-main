@@ -14,6 +14,10 @@ import ProductSort from "@/components/products/product-sort";
 import ProductPagination from "@/components/products/product-pagination";
 import { Product, ProductSortOption } from "@/types/product";
 import { Suspense } from "react";
+import { ErrorMessage } from "@/components/ui/error-boundary";
+import { EmptyState } from "@/components/ui/empty-state";
+import { ProductCardSkeleton } from "@/components/ui/loading";
+import { PackageSearch } from "lucide-react";
 
 interface ProductsPageProps {
   searchParams: Promise<{
@@ -117,26 +121,22 @@ async function ProductsList({
     ) {
       return (
         <div className="container mx-auto px-4 py-8">
-          <div className="rounded-lg border border-destructive bg-destructive/10 p-6 text-center">
-            <p className="mb-2 text-lg font-semibold text-destructive">
-              products 테이블이 존재하지 않습니다
-            </p>
-            <p className="mb-4 text-sm text-muted-foreground">
-              Supabase Dashboard에서 마이그레이션을 실행해주세요.
-            </p>
-            <div className="mx-auto max-w-2xl rounded-lg border bg-muted p-4 text-left">
-              <p className="mb-2 text-sm font-medium">해결 방법:</p>
-              <ol className="list-decimal space-y-1 pl-5 text-sm text-muted-foreground">
-                <li>Supabase Dashboard → SQL Editor로 이동</li>
-                <li>
-                  <code className="rounded bg-background px-1 py-0.5">
-                    supabase/migrations/db.sql
-                  </code>{" "}
-                  파일의 내용을 복사하여 실행
-                </li>
-                <li>또는 Supabase CLI로 마이그레이션 실행</li>
-              </ol>
-            </div>
+          <ErrorMessage
+            message="products 테이블이 존재하지 않습니다"
+            description="Supabase Dashboard에서 마이그레이션을 실행해주세요."
+          />
+          <div className="mx-auto mt-4 max-w-2xl rounded-lg border bg-muted p-4 text-left">
+            <p className="mb-2 text-sm font-medium">해결 방법:</p>
+            <ol className="list-decimal space-y-1 pl-5 text-sm text-muted-foreground">
+              <li>Supabase Dashboard → SQL Editor로 이동</li>
+              <li>
+                <code className="rounded bg-background px-1 py-0.5">
+                  supabase/migrations/db.sql
+                </code>{" "}
+                파일의 내용을 복사하여 실행
+              </li>
+              <li>또는 Supabase CLI로 마이그레이션 실행</li>
+            </ol>
           </div>
         </div>
       );
@@ -144,32 +144,12 @@ async function ProductsList({
 
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="rounded-lg border border-destructive bg-destructive/10 p-6 text-center">
-          <p className="mb-2 text-lg font-semibold text-destructive">
-            상품을 불러오는 중 오류가 발생했습니다.
-          </p>
-          <p className="mt-2 text-sm text-muted-foreground">
-            {error.message || error.code || "알 수 없는 오류가 발생했습니다."}
-          </p>
-          {error.hint && (
-            <p className="mt-1 text-xs text-muted-foreground">
-              힌트: {error.hint}
-            </p>
-          )}
-          {error.details && (
-            <p className="mt-1 text-xs text-muted-foreground">
-              상세: {error.details}
-            </p>
-          )}
-          <div className="mt-4 rounded-lg border bg-muted p-4 text-left">
-            <p className="mb-2 text-sm font-medium">가능한 원인:</p>
-            <ul className="list-disc space-y-1 pl-5 text-xs text-muted-foreground">
-              <li>products 테이블이 아직 생성되지 않았을 수 있습니다</li>
-              <li>Supabase 환경 변수가 올바르게 설정되지 않았을 수 있습니다</li>
-              <li>RLS 정책이 데이터 접근을 차단하고 있을 수 있습니다</li>
-            </ul>
-          </div>
-        </div>
+        <ErrorMessage
+          message="상품을 불러오는 중 오류가 발생했습니다"
+          description={
+            error.message || error.code || "알 수 없는 오류가 발생했습니다."
+          }
+        />
       </div>
     );
   }
@@ -177,12 +157,11 @@ async function ProductsList({
   if (!products || products.length === 0) {
     return (
       <div className="container mx-auto px-4 py-16">
-        <div className="text-center">
-          <h2 className="mb-4 text-2xl font-semibold">등록된 상품이 없습니다</h2>
-          <p className="text-muted-foreground">
-            새로운 상품이 등록되면 여기에 표시됩니다.
-          </p>
-        </div>
+        <EmptyState
+          icon={<PackageSearch className="h-16 w-16 text-muted-foreground" />}
+          title="등록된 상품이 없습니다"
+          description="새로운 상품이 등록되면 여기에 표시됩니다."
+        />
       </div>
     );
   }
@@ -246,10 +225,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
           </div>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div
-                key={i}
-                className="h-96 animate-pulse rounded-lg border bg-muted"
-              />
+              <ProductCardSkeleton key={i} />
             ))}
           </div>
         </div>

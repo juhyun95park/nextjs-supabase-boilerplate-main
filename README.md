@@ -25,7 +25,10 @@
 3. [주요 기능](#주요-기능)
 4. [시작하기](#시작하기)
 5. [추가 설정 및 팁](#추가-설정-및-팁)
-6. [프로젝트 구조](#프로젝트-구조)
+6. [테스트](#테스트)
+7. [배포](#배포)
+8. [문서](#문서)
+9. [프로젝트 구조](#프로젝트-구조)
 
 ## 소개
 
@@ -331,6 +334,9 @@ pnpm start
 
 # 린팅
 pnpm lint
+
+# E2E 테스트 실행
+pnpm test:e2e
 ```
 
 ## 추가 설정 및 팁
@@ -471,6 +477,74 @@ saas-template/
 - **`components/providers/sync-user-provider.tsx`**: 앱 전역에서 사용자 동기화 실행
 - **`CLAUDE.md`**: Claude Code를 위한 프로젝트 가이드
 
+## 테스트
+
+### E2E 테스트
+
+프로젝트는 Playwright를 사용하여 E2E 테스트를 포함하고 있습니다.
+
+**테스트 실행:**
+
+```bash
+# 모든 E2E 테스트 실행
+pnpm test:e2e
+
+# UI 모드로 테스트 실행 (브라우저에서 확인)
+pnpm test:e2e --ui
+
+# 특정 테스트 파일만 실행
+pnpm test:e2e tests/e2e/auth.spec.ts
+```
+
+**테스트 커버리지:**
+
+- 인증 플로우 (로그인/회원가입/로그아웃)
+- 상품 조회 플로우
+- 장바구니 플로우
+- 주문 및 결제 플로우
+- 주문 내역 조회 플로우
+
+자세한 내용은 [Playwright 테스트 가이드](.cursor/rules/web/playwright-test-guide.mdc)를 참고하세요.
+
+## 배포
+
+### Vercel 배포
+
+프로젝트는 Vercel에 최적화되어 있습니다.
+
+**배포 단계:**
+
+1. [Vercel CLI 설치](https://vercel.com/docs/cli) 및 로그인
+2. 프로젝트 디렉토리에서 배포:
+   ```bash
+   vercel
+   ```
+3. 환경 변수 설정 (Vercel Dashboard 또는 CLI)
+
+**환경 변수 설정:**
+
+Vercel Dashboard → Project Settings → Environment Variables에서 다음 변수들을 설정하세요:
+
+- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`
+- `CLERK_SECRET_KEY`
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `NEXT_PUBLIC_TOSS_PAYMENTS_CLIENT_KEY` (결제 기능 사용 시)
+
+자세한 배포 가이드는 [배포 문서](docs/vercel-deployment.md)를 참고하세요.
+
+## 문서
+
+프로젝트의 상세 문서는 `docs/` 디렉토리에 있습니다:
+
+- **[배포 가이드](docs/vercel-deployment.md)**: Vercel 배포 및 환경 변수 설정
+- **[Supabase 통합 가이드](docs/supabase-integration.md)**: Supabase 클라이언트 사용법
+- **[Clerk 로컬라이제이션](docs/clerk-localization.md)**: 한국어 UI 설정
+- **[운영 가이드](docs/operating-guide.md)**: 환경 변수, 데이터베이스, 모니터링, 문제 해결
+- **[개발 가이드](docs/development-guide.md)**: 코드 스타일, 컴포넌트 작성, 테스트, Git 워크플로우
+- **[PRD](docs/prd.md)**: 프로젝트 요구사항 및 기능 명세
+
 ## 추가 리소스
 
 - [Next.js 15 문서](https://nextjs.org/docs)
@@ -478,3 +552,4 @@ saas-template/
 - [Supabase 문서](https://supabase.com/docs)
 - [shadcn/ui 문서](https://ui.shadcn.com/)
 - [Tailwind CSS v4 문서](https://tailwindcss.com/docs)
+- [Playwright 문서](https://playwright.dev/)

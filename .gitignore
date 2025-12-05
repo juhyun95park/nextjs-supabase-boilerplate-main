@@ -11,7 +11,7 @@
 !.yarn/versions
 
 # pnpm
-pnpm-lock.yaml
+# pnpm-lock.yaml should be committed for reproducible builds
 
 # testing
 /coverage
@@ -63,4 +63,27 @@ repomix-output.xml
 # clerk configuration (can include secrets)
 /.clerk/
 
-.vercel
+# Supabase
+supabase/.branches
+supabase/.temp
+supabase/logs
+*.log
+
+# Playwright
+/playwright-report/
+/test-results/
+/playwright/.cache/
+/playwright/.auth/
+
+# Turbo
+.turbo
+
+# IDE - Cursor
+.cursor/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Vercel (duplicate removed)
+# .vercel

@@ -11,8 +11,10 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase/client";
 import { Product, CATEGORY_NAMES } from "@/types/product";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ShoppingCart } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import AddToCartButton from "@/components/products/add-to-cart-button";
+import { ErrorMessage } from "@/components/ui/error-boundary";
 
 interface ProductDetailPageProps {
   params: Promise<{ id: string }>;
@@ -33,8 +35,30 @@ export default async function ProductDetailPage({
     .eq("id", id)
     .single();
 
-  // 상품이 없거나 에러 발생 시 404
-  if (error || !product) {
+  // 에러 발생 시 처리
+  if (error) {
+    console.error("Error fetching product:", error);
+    // 테이블이 없는 경우 특별 처리
+    if (
+      error.code === "42P01" ||
+      error.message?.includes("does not exist") ||
+      error.message?.includes("relation")
+    ) {
+      return (
+        <div className="container mx-auto px-4 py-16">
+          <ErrorMessage
+            message="상품을 불러올 수 없습니다"
+            description="products 테이블이 존재하지 않습니다. Supabase Dashboard에서 마이그레이션을 실행해주세요."
+          />
+        </div>
+      );
+    }
+    // 기타 에러는 404 처리
+    notFound();
+  }
+
+  // 상품이 없는 경우 404
+  if (!product) {
     notFound();
   }
 
@@ -152,18 +176,12 @@ export default async function ProductDetailPage({
           )}
 
           {/* 장바구니 담기 버튼 */}
-          <div className="mt-auto space-y-4">
-            <Button
-              size="lg"
-              className="w-full gap-2"
+          <div className="mt-auto">
+            <AddToCartButton
+              productId={product.id}
               disabled={isOutOfStock}
-            >
-              <ShoppingCart className="h-5 w-5" />
-              {isOutOfStock ? "품절" : "장바구니에 담기"}
-            </Button>
-            <p className="text-xs text-muted-foreground">
-              * 장바구니 기능은 Phase 3에서 구현 예정입니다
-            </p>
+              stockQuantity={product.stock_quantity}
+            />
           </div>
         </div>
       </div>
