@@ -32,7 +32,7 @@ if (!supabaseUrl || !supabaseAnonKey) {
  * RLS 정책이 `to anon`인 데이터만 조회 가능합니다.
  *
  * @example
- * ```tsx
+ * ```typescript
  * // Server Component에서 공개 데이터 조회
  * import { supabase } from '@/lib/supabase/client';
  *
@@ -41,16 +41,13 @@ if (!supabaseUrl || !supabaseAnonKey) {
  *     .from('public_posts')
  *     .select('*')
  *     .eq('published', true);
- *
- *   return <div>{/* 렌더링 */}</div>;
+ *   return data;
  * }
  * ```
  *
  * @example
- * ```tsx
+ * ```typescript
  * // Client Component에서 공개 데이터 조회
- * 'use client';
- *
  * import { supabase } from '@/lib/supabase/client';
  * import { useEffect, useState } from 'react';
  *
@@ -66,8 +63,6 @@ if (!supabaseUrl || !supabaseAnonKey) {
  *     }
  *     fetchData();
  *   }, []);
- *
- *   return <div>{/* 렌더링 */}</div>;
  * }
  * ```
  */

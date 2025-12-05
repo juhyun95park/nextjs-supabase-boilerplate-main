@@ -13,7 +13,6 @@
  */
 
 import { koKR } from "@clerk/localizations";
-import type { LocalizationResource } from "@clerk/types";
 
 /**
  * 커스텀 한국어 로컬라이제이션
@@ -21,7 +20,7 @@ import type { LocalizationResource } from "@clerk/types";
  * 기본 koKR을 확장하여 특정 텍스트를 커스터마이징합니다.
  * 필요에 따라 아래 예제를 참고하여 수정하세요.
  */
-export const customKoKR: LocalizationResource = {
+export const customKoKR = {
   ...koKR,
   // 로그인 페이지 커스터마이징 예제
   signIn: {
