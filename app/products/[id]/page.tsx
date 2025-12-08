@@ -8,8 +8,10 @@
 
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { supabase } from "@/lib/supabase/client";
 import { Product, CATEGORY_NAMES } from "@/types/product";
+import { getProductImageUrl } from "@/lib/utils/product-image";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
@@ -120,12 +122,14 @@ export default async function ProductDetailPage({
       <div className="grid gap-8 lg:grid-cols-2">
         {/* 상품 이미지 */}
         <div className="relative aspect-square w-full overflow-hidden rounded-lg border bg-muted">
-          {/* TODO: 실제 상품 이미지 URL이 추가되면 Image 컴포넌트로 교체 */}
-          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/20 to-primary/5">
-            <span className="text-6xl font-bold text-primary/30">
-              {product.name.charAt(0)}
-            </span>
-          </div>
+          <Image
+            src={getProductImageUrl(product, 800, 800)}
+            alt={product.name}
+            fill
+            className="object-cover"
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            priority
+          />
           {isOutOfStock && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/50">
               <span className="rounded-full bg-destructive px-6 py-3 text-lg font-semibold text-destructive-foreground">

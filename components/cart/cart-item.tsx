@@ -11,6 +11,7 @@ import { useState, useTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { CartItem as CartItemType } from "@/types/cart";
+import { getProductImageUrl } from "@/lib/utils/product-image";
 import { Button } from "@/components/ui/button";
 import {
   updateCartItemQuantity,
@@ -77,12 +78,13 @@ export default function CartItem({ item }: CartItemProps) {
         href={`/products/${item.product.id}`}
         className="relative aspect-square h-24 w-24 shrink-0 overflow-hidden rounded-lg border bg-muted"
       >
-        {/* TODO: 실제 상품 이미지 URL이 추가되면 Image 컴포넌트로 교체 */}
-        <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/20 to-primary/5">
-          <span className="text-2xl font-bold text-primary/30">
-            {item.product.name.charAt(0)}
-          </span>
-        </div>
+        <Image
+          src={getProductImageUrl(item.product, 96, 96)}
+          alt={item.product.name}
+          fill
+          className="object-cover"
+          sizes="96px"
+        />
       </Link>
 
       {/* 상품 정보 */}

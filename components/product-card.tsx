@@ -13,6 +13,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Product, CATEGORY_NAMES } from "@/types/product";
 import { cn } from "@/lib/utils";
+import { getProductImageUrl } from "@/lib/utils/product-image";
 import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -60,12 +61,13 @@ export default function ProductCard({ product }: ProductCardProps) {
         className="relative aspect-square w-full overflow-hidden rounded-t-lg bg-muted"
         aria-label={`${product.name} 상품 상세 보기`}
       >
-        {/* TODO: 실제 상품 이미지 URL이 추가되면 Image 컴포넌트로 교체 */}
-        <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/20 to-primary/5 transition-transform group-hover:scale-105">
-          <span className="text-4xl font-bold text-primary/30">
-            {product.name.charAt(0)}
-          </span>
-        </div>
+        <Image
+          src={getProductImageUrl(product, 400, 400)}
+          alt={product.name}
+          fill
+          className="object-cover transition-transform group-hover:scale-105"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        />
         
         {/* 좋아요 버튼 - legodt.kr 스타일 */}
         <Button
